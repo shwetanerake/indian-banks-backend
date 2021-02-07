@@ -1,0 +1,10 @@
+{
+	"http.hostname": "localhost",
+	"http.port": 8082,
+	"db.type" : "postgresql",
+	"db.port": 5432,
+	"db.hostname" : "localhost",
+	"db.name":"indian_banks",
+	"db.username":"admin",
+	"db.password":"admin123"
+}
