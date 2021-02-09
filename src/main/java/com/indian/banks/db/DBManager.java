@@ -99,7 +99,7 @@ public class DBManager {
 		JsonArray resultSetArray = new JsonArray();
 
 		statement = connection.createStatement();
-		String query = "select COUNT(*) OVER (), * from branches where city='" + cityName + "' order by ifsc offset "
+		String query = "select COUNT(*) OVER (), * from bank_branches where city='" + cityName + "' order by ifsc offset "
 				+ offset + " limit " + limit;
 		System.out.println("findBranchesInCity | executing query: " + query);
 		ResultSet resultSet = statement.executeQuery(query);
@@ -115,7 +115,7 @@ public class DBManager {
 			resultSetArray.add(resultSetJson);
 
 		}
-		System.out.println("findBranchesInCity | db result: " + resultSetArray.encodePrettily());
+		//System.out.println("findBranchesInCity | db result: " + resultSetArray.encodePrettily());
 		return resultSetArray;
 
 	}
@@ -143,7 +143,7 @@ public class DBManager {
 			resultSetArray = findBranchesInCity(connection, cityName, limit, offset);
 		} else {
 			String likePsqlString = "'%" + searchString + "%'";
-			String query = "SELECT COUNT(*) OVER (), * FROM branches ib WHERE ( ib.ifsc like " + likePsqlString
+			String query = "SELECT COUNT(*) OVER (), * FROM bank_branches ib WHERE ( ib.ifsc like " + likePsqlString
 					+ " or ib.branch like " + likePsqlString + " or ib.address like " + likePsqlString
 					+ " or ib.district like " + likePsqlString + " or ib.city like " + likePsqlString
 					+ " or ib.state like " + likePsqlString + " ) AND ib.city='" + cityName + "' order by ifsc limit "
@@ -162,7 +162,7 @@ public class DBManager {
 				resultSetArray.add(resultSetJson);
 			}
 		}
-		System.out.println("search all rows and columns | db result: " + resultSetArray.encodePrettily());
+		//System.out.println("search all rows and columns | db result: " + resultSetArray.encodePrettily());
 		return resultSetArray;
 
 	}
