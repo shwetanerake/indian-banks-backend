@@ -36,7 +36,8 @@ public class HTTPBankServer {
 		} else
 			throw new NullPointerException("http.port missing in conf file");
 
-		vertx.createHttpServer().requestHandler(router).listen(port, hostname);
+		// vertx.createHttpServer().requestHandler(router).listen(port, hostname);
+		vertx.createHttpServer().requestHandler(router).listen(Integer.parseInt(System.getenv("PORT")), hostname);
 		System.out.println("------------------------------------------------------");
 		System.out.println("HTTP Server started on: " + hostname + ":" + port);
 		System.out.println("------------------------------------------------------");
@@ -75,7 +76,7 @@ public class HTTPBankServer {
 
 							Entry<String, String> queryParamEntry = queryParamsIterator.next();
 							System.out.println("/api/branches | http query params | key: " + queryParamEntry.getKey()
-							+ " | value: " + queryParamEntry.getValue());
+									+ " | value: " + queryParamEntry.getValue());
 							if (queryParamEntry.getKey().equalsIgnoreCase("q")) {
 								branchName = queryParamEntry.getValue();
 							}
