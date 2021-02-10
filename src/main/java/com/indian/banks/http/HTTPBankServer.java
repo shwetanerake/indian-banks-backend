@@ -39,7 +39,7 @@ public class HTTPBankServer {
 		// vertx.createHttpServer().requestHandler(router).listen(port, hostname);
 		vertx.createHttpServer().requestHandler(router).listen(Integer.parseInt(System.getenv("PORT")), hostname);
 		System.out.println("------------------------------------------------------");
-		System.out.println("HTTP Server started on: " + hostname + ":" + port);
+		System.out.println("HTTP Server started on: " + hostname + ":" + System.getenv("PORT"));
 		System.out.println("------------------------------------------------------");
 
 	}
