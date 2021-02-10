@@ -1,10 +1,10 @@
 {
-	"http.hostname": "0.0.0.0",
+	"http.hostname": "localhost",
 	"http.port": 8082,
 	"db.type" : "postgresql",
 	"db.port": 5432,
-	"db.hostname" : "bbrpknjpgvyykv6fagk3-postgresql.services.clever-cloud.com",
-	"db.name":"bbrpknjpgvyykv6fagk3",
-	"db.username":"uoctc8m13xkapsiyjqxi",
-	"db.password":"Bmk6zqQP56QjzzqWeN4c"
+	"db.hostname" : "localhost",
+	"db.name":"indian_banks",
+	"db.username":"admin",
+	"db.password":"admin123"
 }

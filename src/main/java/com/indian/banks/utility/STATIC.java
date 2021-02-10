@@ -18,6 +18,7 @@ public final class STATIC {
 
 		public final static class API {
 			public final static String SEARCH = "/api/branches/autocomplete";
+			public final static String GET_BRANCHES = "/api/branches";
 		}
 
 	}

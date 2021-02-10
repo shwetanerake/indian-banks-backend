@@ -99,8 +99,8 @@ public class DBManager {
 		JsonArray resultSetArray = new JsonArray();
 
 		statement = connection.createStatement();
-		String query = "select COUNT(*) OVER (), * from bank_branches where city='" + cityName + "' order by ifsc offset "
-				+ offset + " limit " + limit;
+		String query = "select COUNT(*) OVER (), * from bank_branches where city='" + cityName
+				+ "' order by ifsc offset " + offset + " limit " + limit;
 		System.out.println("findBranchesInCity | executing query: " + query);
 		ResultSet resultSet = statement.executeQuery(query);
 		ResultSetMetaData metaData = resultSet.getMetaData();
@@ -108,14 +108,17 @@ public class DBManager {
 		while (resultSet.next()) {
 			resultSetJson = new JsonObject();
 			for (int i = 1; i <= metaData.getColumnCount(); i++) {
-				/*System.out.println("findBranchesInCity | column name: " + metaData.getColumnName(i) + " | column data: "
-						+ resultSet.getString(i));*/
+				/*
+				 * System.out.println("findBranchesInCity | column name: " +
+				 * metaData.getColumnName(i) + " | column data: " + resultSet.getString(i));
+				 */
 				resultSetJson.put(metaData.getColumnName(i), resultSet.getString(i));
 			}
 			resultSetArray.add(resultSetJson);
 
 		}
-		//System.out.println("findBranchesInCity | db result: " + resultSetArray.encodePrettily());
+		// System.out.println("findBranchesInCity | db result: " +
+		// resultSetArray.encodePrettily());
 		return resultSetArray;
 
 	}
@@ -131,8 +134,8 @@ public class DBManager {
 	 * @throws SQLException
 	 * @throws Exception
 	 */
-	public JsonArray searchAllRowsAndColumns(Connection connection, String cityName, String searchString,
-			String limit, String offset) throws SQLException, Exception {
+	public JsonArray searchAllRowsAndColumns(Connection connection, String cityName, String searchString, String limit,
+			String offset) throws SQLException, Exception {
 		Statement statement;
 		JsonObject resultSetJson = null;
 		JsonArray resultSetArray = new JsonArray();
@@ -146,8 +149,8 @@ public class DBManager {
 			String query = "SELECT COUNT(*) OVER (), * FROM bank_branches ib WHERE ( ib.ifsc like " + likePsqlString
 					+ " or ib.branch like " + likePsqlString + " or ib.address like " + likePsqlString
 					+ " or ib.district like " + likePsqlString + " or ib.city like " + likePsqlString
-					+ " or ib.state like " + likePsqlString + " ) AND ib.city='" + cityName + "' order by ifsc limit "
-					+ limit + " offset " + offset;
+					+ " or ib.state like " + likePsqlString + " or ib.bank_name like " + likePsqlString
+					+ " ) AND ib.city='" + cityName + "' order by ifsc limit " + limit + " offset " + offset;
 			System.out.println("search all rows and columns | Executing query: " + query);
 			ResultSet resultSet = statement.executeQuery(query);
 			ResultSetMetaData metaData = resultSet.getMetaData();
@@ -155,14 +158,17 @@ public class DBManager {
 			while (resultSet.next()) {
 				resultSetJson = new JsonObject();
 				for (int i = 1; i <= metaData.getColumnCount(); i++) {
-					/*System.out.println("search all rows and columns | column name: " + metaData.getColumnName(i)
-							+ " | column data: " + resultSet.getString(i));*/
+					/*
+					 * System.out.println("search all rows and columns | column name: " +
+					 * metaData.getColumnName(i) + " | column data: " + resultSet.getString(i));
+					 */
 					resultSetJson.put(metaData.getColumnName(i), resultSet.getString(i));
 				}
 				resultSetArray.add(resultSetJson);
 			}
 		}
-		//System.out.println("search all rows and columns | db result: " + resultSetArray.encodePrettily());
+		// System.out.println("search all rows and columns | db result: " +
+		// resultSetArray.encodePrettily());
 		return resultSetArray;
 
 	}
