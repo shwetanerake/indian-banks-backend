@@ -33,9 +33,9 @@ public class HTTPBankServer {
 		} else
 			throw new NullPointerException("http.port missing in conf file");
 
-		vertx.createHttpServer().requestHandler(router).listen(port, hostname);
-		// vertx.createHttpServer().requestHandler(router).listen(Integer.parseInt(System.getenv("PORT")),
-		// hostname);
+		//vertx.createHttpServer().requestHandler(router).listen(port, hostname);
+		vertx.createHttpServer().requestHandler(router).listen(Integer.parseInt(System.getenv("PORT")),
+		hostname);
 		System.out.println("------------------------------------------------------");
 		System.out.println("HTTP Server started on: " + hostname + ":" + System.getenv("PORT"));
 		System.out.println("------------------------------------------------------");
