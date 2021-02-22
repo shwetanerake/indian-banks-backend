@@ -1,5 +1,5 @@
 {
-	"http.hostname": "localhost",
+	"http.hostname": "0.0.0.0",
 	"http.port": 8082,
 	"db.type" : "postgresql",
 	"db.port": 5432,
