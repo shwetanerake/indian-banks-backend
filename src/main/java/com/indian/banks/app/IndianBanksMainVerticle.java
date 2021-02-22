@@ -34,9 +34,11 @@ public class IndianBanksMainVerticle extends AbstractVerticle {
 		//db connection as per given configuration
 		connection = dbManager.getConnection(configJson);
 
-		httpBankServer.getBranchesByCityName(connection, router);
+		httpBankServer.listBranchesInCity(connection, router);
 		
-		httpBankServer.searchPossibleMatches(connection, router);
+		httpBankServer.search(connection, router);
+		
+		httpBankServer.getBranchDetails(connection, router);
 		
 		
 

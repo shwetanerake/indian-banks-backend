@@ -92,7 +92,7 @@ public class DBManager {
 	 * @throws SQLException
 	 * @throws Exception
 	 */
-	public JsonArray findBranchesInCity(Connection connection, String cityName, String limit, String offset)
+	public JsonArray listBranchesByCityName(Connection connection, String cityName, String limit, String offset)
 			throws SQLException, Exception {
 		Statement statement;
 		JsonObject resultSetJson = null;
@@ -143,7 +143,7 @@ public class DBManager {
 		statement = connection.createStatement();
 
 		if (searchString.isEmpty() || searchString == null) {
-			resultSetArray = findBranchesInCity(connection, cityName, limit, offset);
+			resultSetArray = listBranchesByCityName(connection, cityName, limit, offset);
 		} else {
 			String likePsqlString = "'%" + searchString + "%'";
 			String query = "SELECT COUNT(*) OVER (), * FROM bank_branches ib WHERE ( ib.ifsc like " + likePsqlString
@@ -172,4 +172,38 @@ public class DBManager {
 		return resultSetArray;
 
 	}
+
+	/**
+	 * 
+	 * @param connection
+	 * @param ifsc
+	 * @return
+	 * @throws SQLException
+	 * @throws Exception
+	 */
+	public JsonObject findBranchByIfsc(Connection connection, String ifsc) throws SQLException, Exception {
+		Statement statement;
+		JsonObject resultSetJson = new JsonObject();
+		
+		statement = connection.createStatement();
+		String query = "select * from bank_branches where ifsc='" + ifsc + "'";
+		System.out.println("findBranchByIfsc | executing query: " + query);
+		ResultSet resultSet = statement.executeQuery(query);
+		ResultSetMetaData metaData = resultSet.getMetaData();
+
+		while (resultSet.next()) {
+			//resultSetJson = new JsonObject();
+			for (int i = 1; i <= metaData.getColumnCount(); i++) {
+				/*
+				 * System.out.println("findBranchesInCity | column name: " +
+				 * metaData.getColumnName(i) + " | column data: " + resultSet.getString(i));
+				 */
+				resultSetJson.put(metaData.getColumnName(i), resultSet.getString(i));
+			}
+		}
+		System.out.println("findBranchByIfsc | db result: " + resultSetJson.encodePrettily());
+		return resultSetJson;
+
+	}
+
 }

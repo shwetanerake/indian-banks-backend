@@ -47,9 +47,9 @@ public class HTTPBankServer {
 	 * @param connection
 	 * @param router
 	 */
-	public void getBranchesByCityName(Connection connection, Router router) {
+	public void listBranchesInCity(Connection connection, Router router) {
 
-		router.route(HttpMethod.GET, STATIC.HTTP.API.GET_BRANCHES).handler(new Handler<RoutingContext>() {
+		router.route(HttpMethod.GET, STATIC.HTTP.API.LIST_BRANCHES).handler(new Handler<RoutingContext>() {
 
 			@Override
 			public void handle(RoutingContext routingContext) {
@@ -64,32 +64,31 @@ public class HTTPBankServer {
 					String cityName = queryParams.contains("q") ? queryParams.get("q") : "unknown";
 
 					if (cityName.equalsIgnoreCase("unknown") || cityName.isEmpty()) {
-						
+
 						responseJson.put(STATIC.HTTP.RESPONSE.EXIT_CODE, -2);
 						responseJson.put(STATIC.HTTP.RESPONSE.STATUS, "q query param missing or is blank");
 
 					} else {
-						
-						/*Iterator<Entry<String, String>> queryParamsIterator = queryParams.iterator();
 
-						while (queryParamsIterator.hasNext()) {
-
-							Entry<String, String> queryParamEntry = queryParamsIterator.next();
-							System.out.println(STATIC.HTTP.API.GET_BRANCHES + " | http query params | key: "
-									+ queryParamEntry.getKey() + " | value: " + queryParamEntry.getValue());
-							if (queryParamEntry.getKey().equalsIgnoreCase("q")) {
-								cityName = queryParamEntry.getValue();
-							}
-							if (queryParamEntry.getKey().equalsIgnoreCase("limit")) {
-								limit = queryParamEntry.getValue();
-							}
-							if (queryParamEntry.getKey().equalsIgnoreCase("offset")) {
-								offset = queryParamEntry.getValue();
-							}
-						}*/
-						System.out.println(STATIC.HTTP.API.GET_BRANCHES + " | offset:" + offset + " | limit:" + limit
+						/*
+						 * Iterator<Entry<String, String>> queryParamsIterator = queryParams.iterator();
+						 * 
+						 * while (queryParamsIterator.hasNext()) {
+						 * 
+						 * Entry<String, String> queryParamEntry = queryParamsIterator.next();
+						 * System.out.println(STATIC.HTTP.API.GET_BRANCHES +
+						 * " | http query params | key: " + queryParamEntry.getKey() + " | value: " +
+						 * queryParamEntry.getValue()); if
+						 * (queryParamEntry.getKey().equalsIgnoreCase("q")) { cityName =
+						 * queryParamEntry.getValue(); } if
+						 * (queryParamEntry.getKey().equalsIgnoreCase("limit")) { limit =
+						 * queryParamEntry.getValue(); } if
+						 * (queryParamEntry.getKey().equalsIgnoreCase("offset")) { offset =
+						 * queryParamEntry.getValue(); } }
+						 */
+						System.out.println(STATIC.HTTP.API.LIST_BRANCHES + " | offset:" + offset + " | limit:" + limit
 								+ " | q: " + cityName);
-						JsonArray listOfBranchesInCity = dbManager.findBranchesInCity(connection, cityName, limit,
+						JsonArray listOfBranchesInCity = dbManager.listBranchesByCityName(connection, cityName, limit,
 								offset);
 
 						// Write a json response
@@ -128,7 +127,7 @@ public class HTTPBankServer {
 	 * @param connection
 	 * @param router
 	 */
-	public void searchPossibleMatches(Connection connection, Router router) {
+	public void search(Connection connection, Router router) {
 
 		router.route(HttpMethod.GET, STATIC.HTTP.API.SEARCH).handler(new Handler<RoutingContext>() {
 
@@ -150,7 +149,7 @@ public class HTTPBankServer {
 						responseJson.put(STATIC.HTTP.RESPONSE.STATUS, "city query param missing or is blank");
 
 					} else {
-						
+
 						System.out.println(STATIC.HTTP.API.SEARCH + " | city-name:" + cityName + " | offset:" + offset
 								+ " | limit:" + limit + " | q: " + searchString);
 
@@ -184,6 +183,65 @@ public class HTTPBankServer {
 
 		});
 
+	}
+
+	/**
+	 * 
+	 * @param connection
+	 * @param router
+	 */
+	public void getBranchDetails(Connection connection, Router router) {
+		// TODO Auto-generated method stub
+		router.route(HttpMethod.GET, STATIC.HTTP.API.GET_BRANCH_DETAILS).handler(new Handler<RoutingContext>() {
+
+			@Override
+			public void handle(RoutingContext routingContext) {
+				// TODO Auto-generated method stub
+				JsonObject responseJson = new JsonObject();
+				try {
+
+					MultiMap queryParams = routingContext.queryParams();
+					String ifscParam = queryParams.contains("ifsc") ? queryParams.get("ifsc") : "unknown";
+
+					if (ifscParam.equalsIgnoreCase("unknown") || ifscParam.isEmpty()) {
+
+						responseJson.put(STATIC.HTTP.RESPONSE.EXIT_CODE, -2);
+						responseJson.put(STATIC.HTTP.RESPONSE.STATUS, "ifsc query param missing or is blank");
+
+					} else {
+
+						
+						System.out.println(STATIC.HTTP.API.GET_BRANCH_DETAILS + " | ifsc: " + ifscParam);
+						JsonObject branchDetails = dbManager.findBranchByIfsc(connection, ifscParam);
+						// Write a json response
+
+						responseJson.put(STATIC.HTTP.RESPONSE.EXIT_CODE, 0);
+						responseJson.put(STATIC.HTTP.RESPONSE.STATUS, "success");
+						responseJson.put("branch_details", branchDetails);
+					}
+
+				} catch (SQLException sqlException) {
+					// TODO: handle exception
+					sqlException.printStackTrace();
+					responseJson.put(STATIC.HTTP.RESPONSE.EXIT_CODE, -1);
+					responseJson.put(STATIC.HTTP.RESPONSE.STATUS, sqlException.getLocalizedMessage());
+				} catch (Exception exception) {
+					// TODO Auto-generated catch block
+					exception.printStackTrace();
+					responseJson.put(STATIC.HTTP.RESPONSE.EXIT_CODE, -1);
+					responseJson.put(STATIC.HTTP.RESPONSE.STATUS, exception.getLocalizedMessage());
+				}
+				routingContext.response().putHeader(STATIC.HTTP.RESPONSE.HEADERS.ACCESS_CONTROL_ALLOW_HEADERS,
+						"Content-Type");
+				routingContext.response().putHeader(STATIC.HTTP.RESPONSE.HEADERS.ACCESS_CONTROL_ALLOW_METHODS,
+						"GET, POST, OPTIONS");
+				routingContext.response().putHeader(STATIC.HTTP.RESPONSE.HEADERS.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+				System.out.println(STATIC.HTTP.API.GET_BRANCH_DETAILS + " | HTTP response: " +
+				responseJson.toString());
+				routingContext.response().send(responseJson.toString());
+
+			}
+		});
 	}
 
 }
