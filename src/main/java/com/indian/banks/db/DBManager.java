@@ -146,10 +146,10 @@ public class DBManager {
 			resultSetArray = listBranchesByCityName(connection, cityName, limit, offset);
 		} else {
 			String likePsqlString = "'%" + searchString + "%'";
-			String query = "SELECT COUNT(*) OVER (), * FROM bank_branches ib WHERE ( ib.ifsc like " + likePsqlString
-					+ " or ib.branch like " + likePsqlString + " or ib.address like " + likePsqlString
-					+ " or ib.district like " + likePsqlString + " or ib.city like " + likePsqlString
-					+ " or ib.state like " + likePsqlString + " or ib.bank_name like " + likePsqlString
+			String query = "SELECT COUNT(*) OVER (), * FROM bank_branches ib WHERE ( ib.ifsc ilike " + likePsqlString
+					+ " or ib.branch ilike " + likePsqlString + " or ib.address ilike " + likePsqlString
+					+ " or ib.district ilike " + likePsqlString + " or ib.city ilike " + likePsqlString
+					+ " or ib.state ilike " + likePsqlString + " or ib.bank_name ilike " + likePsqlString
 					+ " ) AND ib.city='" + cityName + "' order by ifsc limit " + limit + " offset " + offset;
 			System.out.println("search all rows and columns | Executing query: " + query);
 			ResultSet resultSet = statement.executeQuery(query);
