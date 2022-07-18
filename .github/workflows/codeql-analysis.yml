@@ -39,9 +39,6 @@ jobs:
       actions: read
       contents: read
       security-events: write
-    steps:
-      - run: |
-          echo "Log level: $LEVEL"
 
     strategy:
       fail-fast: false
@@ -53,6 +50,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+    - run: |
+          echo "Log level: $LEVEL"
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
