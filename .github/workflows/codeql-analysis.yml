@@ -21,10 +21,15 @@ on:
     - cron: '35 2 * * 1'
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
-        required: true 
+     logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning' 
+        type: choice
+        options:
+        - info
+        - warning
+        - debug 
 
 jobs:
   analyze:
@@ -34,6 +39,9 @@ jobs:
       actions: read
       contents: read
       security-events: write
+    steps:
+      - run: |
+          echo "Log level: $LEVEL"
 
     strategy:
       fail-fast: false
